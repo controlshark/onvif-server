@@ -56,7 +56,7 @@ class OnvifServer {
 
 		listen(request, response) {
 		const pathname = url.parse(request.url, true).pathname;
-
+console.log("hello world");asdfsadf3  s
 		if (pathname === '/snapshot.png') {
 			// your existing snapshot code
 			const image = fs.readFileSync('./resources/snapshot.png');
@@ -73,7 +73,7 @@ class OnvifServer {
 		response.writeHead(404, {'Content-Type': 'text/plain'});
 		response.end('404 Not Found\n');
 		}
-		
+
     startServer() {
         // Bind HTTP server on all interfaces
         this.server = http.createServer(this.listen.bind(this));
