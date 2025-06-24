@@ -54,18 +54,26 @@ class OnvifServer {
         this.onvif = { /* unchanged services definitions */ };
     }
 
-    listen(request, response) {
-        let action = url.parse(request.url, true).pathname;
-        if (action === '/snapshot.png') {
-            let image = fs.readFileSync('./resources/snapshot.png');
-            response.writeHead(200, {'Content-Type': 'image/png'});
-            response.end(image, 'binary');
-        } else {
-            response.writeHead(404, {'Content-Type': 'text/plain'});
-            response.end('404 Not Found\n');
-        }
-    }
+		listen(request, response) {
+		const pathname = url.parse(request.url, true).pathname;
 
+		if (pathname === '/snapshot.png') {
+			// your existing snapshot code
+			const image = fs.readFileSync('./resources/snapshot.png');
+			response.writeHead(200, {'Content-Type': 'image/png'});
+			return response.end(image, 'binary');
+		}
+
+		// if it's a SOAP path, do nothing—let soap.listen() handle it
+		if (pathname.startsWith('/onvif/')) {
+			return;
+		}
+
+		// otherwise, 404
+		response.writeHead(404, {'Content-Type': 'text/plain'});
+		response.end('404 Not Found\n');
+		}
+		
     startServer() {
         // Bind HTTP server on all interfaces
         this.server = http.createServer(this.listen.bind(this));
