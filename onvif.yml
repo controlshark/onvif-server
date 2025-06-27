@@ -1,0 +1,36 @@
+
+onvif:
+  - name: onvifCam
+    mac: 06:a9:24:1a:74:5f
+    uuid: 1714a629-ebe5-4bb8-a430-c18ffd8fa5f1
+    hostname: 192.168.7.98
+    username: admin
+    password: password
+    disableDiscovery: false
+    debug: true
+    ports:
+      server:   8081
+      rtsp:     8554
+      snapshot: 8580
+    highQuality:
+      rtsp:       /cam
+      snapshot:   /snapshot
+      width:      640
+      height:     480
+      framerate:  10
+      bitrate:    512
+      quality:    1
+    lowQuality:
+      rtsp:       /cam
+      snapshot:   /snapshot
+      width:      640
+      height:     480
+      framerate:  10
+      bitrate:    512
+      quality:    1
+
+    target:
+      hostname: "camera"
+      ports:
+        rtsp:     8554
+        snapshot: 9998

@@ -1,0 +1,74 @@
+
+
+
+curl -s -u admin:password \
+  -H 'Content-Type: application/soap+xml; charset=utf-8; action="http://www.onvif.org/ver10/media/wsdl/GetStreamUri"' \
+  -d '<?xml version="1.0" encoding="utf-8"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope"
+            xmlns:trt="http://www.onvif.org/ver10/media/wsdl">
+  <s:Body>
+    <trt:GetStreamUri>
+      <trt:StreamSetup>
+        <trt:Stream>RTP-Unicast</trt:Stream>
+        <trt:Transport>
+          <trt:Protocol>RTSP</trt:Protocol>
+        </trt:Transport>
+      </trt:StreamSetup>
+      <trt:ProfileToken>highQuality</trt:ProfileToken>
+    </trt:GetStreamUri>
+  </s:Body>
+</s:Envelope>' \
+  http://localhost:8081/onvif/media_service
+
+
+curl -s -u admin:password \
+  -H 'Content-Type: application/soap+xml; charset=utf-8; action="http://www.onvif.org/ver10/media/wsdl/GetStreamUri"' \
+  -d '<?xml version="1.0" encoding="utf-8"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope"
+            xmlns:trt="http://www.onvif.org/ver10/media/wsdl">
+  <s:Body>
+    <trt:GetStreamUri>
+      <trt:StreamSetup>
+        <trt:Stream>RTP-Unicast</trt:Stream>
+        <trt:Transport>
+          <trt:Protocol>RTSP</trt:Protocol>
+        </trt:Transport>
+      </trt:StreamSetup>
+      <trt:ProfileToken>highQuality</trt:ProfileToken>
+    </trt:GetStreamUri>
+  </s:Body>
+</s:Envelope>' \
+  http://192.168.7.98:8081/onvif/media_service
+
+
+ffprobe -v error -show_streams -show_format rtsp://127.0.0.1:8554/cam
+ffprobe -v error -show_streams -show_format rtsp://192.168.7.98:8554/cam
+
+// test mediamtx
+ffplay -rtsp_transport tcp rtsp://localhost:8555/cam
+ffplay -rtsp_transport tcp rtsp://192.168.7.98:8555/cam
+
+// test onvif stream
+ffplay -rtsp_transport tcp rtsp://localhost:8554/cam
+ffplay -rtsp_transport tcp rtsp://192.168.7.98:8554/cam
+
+
+// get main_stream rtsp url
+curl -s -u admin:password \
+  -H 'Content-Type: application/soap+xml; charset=utf-8; action="http://www.onvif.org/ver10/media/wsdl/GetStreamUri"' \
+  -d '<?xml version="1.0"?>
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope"
+               xmlns:trt="http://www.onvif.org/ver10/media/wsdl">
+  <soap:Body>
+    <trt:GetStreamUri>
+      <trt:StreamSetup>
+        <trt:Stream>RTP-Unicast</trt:Stream>
+        <trt:Transport>
+          <trt:Protocol>RTSP</trt:Protocol>
+        </trt:Transport>
+      </trt:StreamSetup>
+      <trt:ProfileToken>main_stream</trt:ProfileToken>
+    </trt:GetStreamUri>
+  </soap:Body>
+</soap:Envelope>' \
+  http://192.168.7.98:8081/onvif/media_service | xmllint --format -

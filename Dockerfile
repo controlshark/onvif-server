@@ -4,4 +4,4 @@ ADD . /app
 WORKDIR /app
 RUN npm install
 
-ENTRYPOINT node main.js /onvif.yaml
+ENTRYPOINT node main.js --debug /onvif.yml

@@ -7,7 +7,7 @@ const readline = require('readline');
 const stream = require('stream');
 const yaml = require('yaml');
 const fs = require('fs');
-const simpleLogger = require('simple-node-logger');
+//const simpleLogger = require('simple-node-logger');
 
 const parser = new argparse.ArgumentParser({
     description: 'Virtual Onvif Server'
@@ -21,7 +21,13 @@ parser.add_argument('config', { help: 'config filename to use', nargs: '?'});
 let args = parser.parse_args();
 
 if (args) {
-    const logger = simpleLogger.createSimpleLogger();
+//    const logger = simpleLogger.createSimpleLogger();
+	 const logger = {
+		info:  (...args) => console.log('[INFO]',  ...args),
+		warn:  (...args) => console.warn('[WARN]',  ...args),
+		error: (...args) => console.error('[ERROR]', ...args)
+		};
+		/*
     if (args.debug)
         logger.setLevel('trace');
 
@@ -29,7 +35,7 @@ if (args) {
         logger.info('Version: ' + package.version);
         return;
     }
-
+*/
     if (args.create_config) {
         let mutableStdout = new stream.Writable({
             write: function(chunk, encoding, callback) {
@@ -93,8 +99,8 @@ if (args) {
                 logger.info(`Starting virtual onvif server for ${onvifConfig.name} on ${onvifConfig.mac} ${server.getHostname()}:${onvifConfig.ports.server} ...`);
                 server.startServer();
                 server.startDiscovery();
-                if (args.debug)
-                    server.enableDebugOutput();
+                //if (args.debug)
+                //    server.enableDebugOutput();
                 logger.info('  Started!');
                 logger.info('');
 
